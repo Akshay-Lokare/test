@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+
+    stages{
+        stage('Checkout'){
+            steps {
+                git branch: 'main'
+                url: 'https://github.com/Akshay-Lokare/test.git'
+            }
+        }
+        stage('Build'){
+            steps {
+                bat 'mvn clean compile'
+            }
+        }
+        stage('Test'){
+            steps {
+                bat 'mvn test'
+            }
+        }
+        stage('Package'){
+            steps {
+                bat 'mvn package'
+            }
+        }
+        stage('Run Application'){
+            steps {
+                bat 'java -cp target/prac-demo-1.0-SNAPSHOT.jar com.ak.App'
+            }
+        }
+        stage('Archive Artifact'){
+            steps {
+                archiveArtifacts artifacts: 'target/*.jar',
+                fingerprint: true
+            }
+        }
+    }
+
+}
